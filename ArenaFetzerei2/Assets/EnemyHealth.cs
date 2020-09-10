@@ -15,6 +15,7 @@ public class EnemyHealth : MonoBehaviour
     }
 
     void Die() {
+        ScoreScript.scoreValue += 10;
         Destroy(gameObject);
     }
 

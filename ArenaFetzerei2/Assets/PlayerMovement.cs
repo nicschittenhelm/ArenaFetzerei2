@@ -5,46 +5,135 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public CharacterController controller;
-    public float speed = 16f;
-    public float gravity = -3000000f;
-    public float jumpHeight = 3f;
+    [SerializeField] private Transform debugHitPointTransform;
+    [SerializeField] private Transform hookshotTransform;
+    private float mouseSensitivityX = 1.5f;
+    private float mouseSensitivityY = 3f;
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
+    private CharacterController characterController;
+    private float cameraVerticalAngle;
+    private float characterVelocityY;
+    private Camera playerCamera;
+    private State state;
+    private Vector3 hookshotPosition;
+    private float hookshotSize;
 
-    Vector3 velocity;
-    bool isGrounded;
-
-
-
-    void Update()
-    {
-
-        bool isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        if (isGrounded && velocity.y < 0) {
-            velocity.y = -2f;
-        }
-
-
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-
-    
-
-        if (Input.GetButtonDown("Jump") && isGrounded) {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            x = 0;
-            z = 0;
-        }
-
-        Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * speed * Time.deltaTime);
-
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+    private enum State {
+        Normal,
+        HookshotFlyingPlayer,
+        HookshotTrown
     }
+
+
+    private void Awake() {
+        characterController = GetComponent<CharacterController>();
+        playerCamera = transform.Find("fpsCamera").GetComponent<Camera>();
+        state = State.Normal;
+        hookshotTransform.gameObject.SetActive(false); // DAMIT SEIL ANFANGS NICHT SICHBAR IST
+    }
+
+    private void Update() {
+        switch (state) {
+        default:
+        case State.Normal: // WENN STATE NORMAL IST, DANN ALLES WIE ÜBLICH
+            HandleCharacterCamera();
+            HandleCharacterMovement();
+            HandleHookshotStart();
+            break;
+        case State.HookshotTrown:
+            HandleCharacterCamera();
+            HandleHookshotThrow();
+            break;
+        case State.HookshotFlyingPlayer: // WENN STATE HOOKSHOTFLYING PLAYER, DANN WIRD HOOKSHOTFLYINGPLAYER AUFGERUFEN
+            HandleCharacterCamera();
+            HookshotMovement();
+            break;
+        }
+    }
+
+    private void HandleCharacterCamera() {
+        float lookX = Input.GetAxisRaw("Mouse X");
+        float lookY = Input.GetAxisRaw("Mouse Y");
+
+        transform.Rotate(new Vector3(0f, lookX * mouseSensitivityX, 0f), Space.Self);
+
+        cameraVerticalAngle -= lookY * mouseSensitivityY;
+
+        cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -89f, 89f);
+
+        playerCamera.transform.localEulerAngles = new Vector3(cameraVerticalAngle, 0, 0);
+    }
+
+    private void HandleCharacterMovement() {
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveZ = Input.GetAxisRaw("Vertical");
+
+        float moveSpeed = 15f;
+
+        Vector3 characterVelocity = transform.right * moveX * moveSpeed + transform.forward * moveZ * moveSpeed;
+
+        if (characterController.isGrounded) {
+            characterVelocityY = 0f;
+            //JUMP
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                float jumpSpeed = 15f;
+                characterVelocityY = jumpSpeed;
+            }
+        }
+
+        float gravityDownForce = -50f;
+        characterVelocityY += gravityDownForce * Time.deltaTime;
+
+        characterVelocity.y = characterVelocityY;
+
+        characterController.Move(characterVelocity * Time.deltaTime);
+    }
+
+    private void HandleHookshotStart() {
+        if (Input.GetKeyDown(KeyCode.E)) {
+            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit raycastHit)) {
+                // HIT SOMETHING
+                debugHitPointTransform.position = raycastHit.point;
+                hookshotPosition = raycastHit.point; // WENN MAN ETWAS TRIFFT, NEUE POSITION - DORT WILL MAN SICH HINZIEHEN
+                //hookshotSize = 0f;
+                hookshotTransform.gameObject.SetActive(true);
+                state = State.HookshotTrown; // UND STATE AENDERN DAMIT HOOKSHOTMOVEMENT AUFGERUFEN WERDEN KANN
+            }
+        }
+    }
+
+    private void HandleHookshotThrow(){
+        hookshotTransform.LookAt(hookshotPosition);
+        
+        float hookshotThrowSpeed = 30f;
+        hookshotSize += hookshotThrowSpeed * Time.deltaTime;
+        hookshotTransform.localScale = new Vector3(1,1,hookshotSize);
+
+        if (hookshotSize >= Vector3.Distance(transform.position, hookshotPosition)){
+            state = State.HookshotFlyingPlayer;
+        }
+    }
+    private void HookshotMovement() { // CHARACTER MOVEMENT WENN HOOKSHOT AUF ETWAS TRIFFT, SIEHE HANDLEHOOKSHOT RAYCASTHIT.POINT
+        hookshotTransform.LookAt(hookshotPosition);
+
+        Vector3 hookshotDirection = (hookshotPosition - transform.position/*CURRENT POSITION*/).normalized;
+
+        float hookshotSpeedMin = 10f;
+        float hookshotSpeedMax = 30f;
+        float hookshotSpeed = Mathf.Clamp(Vector3.Distance(transform.position, hookshotPosition), hookshotSpeedMin, hookshotSpeedMax);
+
+        characterController.Move(hookshotDirection * hookshotSpeed * 2f * Time.deltaTime);
+
+        // ENDE ERREICH, HOOKSHOT CANCEL
+        if (Vector3.Distance(transform.position, hookshotPosition) < 9f){
+            hookshotTransform.gameObject.SetActive(false);
+            state = State.Normal;
+        }
+
+        if(Input.GetKeyDown(KeyCode.E)) {
+            hookshotTransform.gameObject.SetActive(false);
+            state = State.Normal;
+        }
+    }
+
 }

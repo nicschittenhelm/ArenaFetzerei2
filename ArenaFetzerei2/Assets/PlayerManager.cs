@@ -22,8 +22,14 @@ public class PlayerManager : MonoBehaviour
 
         //Debug.Log(PlayerHealth);
         
-        if (PlayerHealth <= 0) {
-            Debug.Log("Game Over");
+    if (PlayerHealth <= 0) {
+        Debug.Log("Game Over");
+        // SCORE
+            if(ScoreScript.scoreValue >= HighScoreScript.highScore){
+                HighScoreScript.highScore = ScoreScript.scoreValue;
+            }
+            ScoreScript.scoreValue = 0;
+            HealthScript.health = 100;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }

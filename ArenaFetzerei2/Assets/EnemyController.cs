@@ -35,6 +35,7 @@ public class EnemyController : MonoBehaviour
     void Attack(){
         if (AttackCooldown <= 0) {
             PlayerManager.instance.PlayerHealth -= AttackDamage;
+            HealthScript.health -= 30; // HEALTH
             Debug.Log("Attack");
             AttackCooldown = 1 / AttackSpeed;
         }
