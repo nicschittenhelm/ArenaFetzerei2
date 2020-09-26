@@ -7,8 +7,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Transform debugHitPointTransform;
     [SerializeField] private Transform hookshotTransform;
-    private float mouseSensitivityX = 1.5f;
-    private float mouseSensitivityY = 3f;
+    public float mouseSensitivityX = 1.5f;
+    public float mouseSensitivityY = 3f;
 
     private CharacterController characterController;
     private float cameraVerticalAngle;
@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
     private State state;
     private Vector3 hookshotPosition;
     private float hookshotSize;
+
+    private void Start() {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     private enum State {
         Normal,

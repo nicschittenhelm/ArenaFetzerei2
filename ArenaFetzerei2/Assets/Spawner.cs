@@ -5,13 +5,23 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
 
-    public float spawnDelay = 5f;
+    public float spawnDelay = 30;
     public GameObject EnemyPrefab;
+    public int delayInterval = 10;
+    public float minSpawnDelay = 1.0f;
+
+    private int delayIntervalCounter = 0;
 
     IEnumerator Start() {
         while(true) {
-            yield return new WaitForSeconds(spawnDelay * Random.Range(0.8f,1.2f));
             Spawn();
+            delayIntervalCounter++;
+            Debug.Log(spawnDelay);
+            if (delayIntervalCounter >= delayInterval && spawnDelay >= minSpawnDelay) {
+                spawnDelay = spawnDelay * 0.8f;
+                delayIntervalCounter = 0;
+            }
+            yield return new WaitForSeconds(spawnDelay * Random.Range(0.8f,1.2f));
         }
     }
 

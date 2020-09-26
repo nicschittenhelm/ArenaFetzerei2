@@ -11,7 +11,6 @@ public class Gun : MonoBehaviour
     public float reloadTime = 2f;
     public Animator animator;
     public ParticleSystem muzzleFlash;
-    public GameObject impactEffect;
 
     private int currAmmo;
     private double nextTimeToFire = 0;
@@ -92,9 +91,6 @@ public class Gun : MonoBehaviour
                 target.TakeDamage(damage);
                 //Debug.Log(target.GetHealth());
             }
-
-            GameObject impact = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-            Destroy(impact, 1f);
         }
     }
 
