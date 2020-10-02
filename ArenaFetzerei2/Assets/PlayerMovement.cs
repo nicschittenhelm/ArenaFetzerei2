@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform debugHitPointTransform;
     [SerializeField] private Transform hookshotTransform;
     public float mouseSensitivityX = 1.5f;
-    public float mouseSensitivityY = 3f;
+    public float mouseSensitivityY = 1.5f;
 
     private CharacterController characterController;
     private float cameraVerticalAngle;
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
 
-        float moveSpeed = 15f;
+        float moveSpeed = 12f;
 
         Vector3 characterVelocity = transform.right * moveX * moveSpeed + transform.forward * moveZ * moveSpeed;
 

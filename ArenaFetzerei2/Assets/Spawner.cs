@@ -5,9 +5,9 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
 
-    public float spawnDelay = 30;
+    public float spawnDelay = 15;
     public GameObject EnemyPrefab;
-    public int delayInterval = 10;
+    public int delayInterval = 5;
     public float minSpawnDelay = 1.0f;
 
     private int delayIntervalCounter = 0;

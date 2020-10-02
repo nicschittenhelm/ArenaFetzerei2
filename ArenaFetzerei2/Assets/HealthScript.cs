@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class HealthScript : MonoBehaviour
 {
 
-
     public static int health = 100;
 
     Text healthText;
