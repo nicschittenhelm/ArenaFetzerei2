@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    [SerializeField] private Transform debugHitPointTransform;
-    [SerializeField] private Transform hookshotTransform;
+    [SerializeField] public Transform debugHitPointTransform;
+    [SerializeField] public Transform hookshotTransform;
     public float mouseSensitivityX = 1.5f;
     public float mouseSensitivityY = 1.5f;
 
@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
     private void HandleHookshotThrow(){
         hookshotTransform.LookAt(hookshotPosition);
         
-        float hookshotThrowSpeed = 30f;
+        float hookshotThrowSpeed = 100f;
         hookshotSize += hookshotThrowSpeed * Time.deltaTime;
         hookshotTransform.localScale = new Vector3(1,1,hookshotSize);
 

@@ -121,7 +121,7 @@ MonoBehaviour:
     showEyeDropper: 1
   hueShift:
     m_OverrideState: 1
-    m_Value: -10
+    m_Value: -12
     min: -180
     max: 180
   saturation:
@@ -143,6 +143,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   m_AdvancedMode: 0
+  quality:
+    m_OverrideState: 0
+    m_Value: 1
   rayTracing:
     m_OverrideState: 1
     m_Value: 0
@@ -156,24 +159,11 @@ MonoBehaviour:
     m_Value: 1
     min: 0
     max: 1
-  stepCount:
-    m_OverrideState: 1
-    m_Value: 6
-    min: 2
-    max: 32
   radius:
     m_OverrideState: 1
     m_Value: 2.13
     min: 0.25
     max: 5
-  fullResolution:
-    m_OverrideState: 1
-    m_Value: 1
-  maximumRadiusInPixels:
-    m_OverrideState: 1
-    m_Value: 40
-    min: 16
-    max: 256
   temporalAccumulation:
     m_OverrideState: 1
     m_Value: 1
@@ -182,14 +172,6 @@ MonoBehaviour:
     m_Value: 1
     min: 0
     max: 1
-  bilateralUpsample:
-    m_OverrideState: 1
-    m_Value: 1
-  directionCount:
-    m_OverrideState: 1
-    m_Value: 2
-    min: 1
-    max: 6
   blurSharpness:
     m_OverrideState: 1
     m_Value: 0.1
@@ -218,6 +200,27 @@ MonoBehaviour:
     m_Value: 0.5
     min: 0.001
     max: 1
+  m_StepCount:
+    m_OverrideState: 1
+    m_Value: 6
+    min: 2
+    max: 32
+  m_FullResolution:
+    m_OverrideState: 1
+    m_Value: 1
+  m_MaximumRadiusInPixels:
+    m_OverrideState: 1
+    m_Value: 40
+    min: 16
+    max: 256
+  m_BilateralUpsample:
+    m_OverrideState: 1
+    m_Value: 1
+  m_DirectionCount:
+    m_OverrideState: 1
+    m_Value: 2
+    min: 1
+    max: 6
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,6 +245,7 @@ MonoBehaviour:
   - {fileID: -6403668860435142693}
   - {fileID: 4758177581409688146}
   - {fileID: 4848441942286537356}
+  - {fileID: 7335688794322565954}
 --- !u!114 &1004664503883095797
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -277,17 +281,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa3b8214f75b354e9ba2caadd022259, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   quality:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   focusMode:
     m_OverrideState: 1
     m_Value: 1
   focusDistance:
     m_OverrideState: 1
-    m_Value: 15
+    m_Value: 0.1
     min: 0.1
   nearFocusStart:
     m_OverrideState: 1
@@ -437,6 +441,59 @@ MonoBehaviour:
     m_Value: 1
     min: 0
     max: 1
+--- !u!114 &7335688794322565954
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f086a068d4c5889438831b3ae9afc11c, type: 3}
+  m_Name: Tonemapping
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  mode:
+    m_OverrideState: 1
+    m_Value: 2
+  toeStrength:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  toeLength:
+    m_OverrideState: 1
+    m_Value: 0.5
+    min: 0
+    max: 1
+  shoulderStrength:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  shoulderLength:
+    m_OverrideState: 1
+    m_Value: 0.5
+    min: 0
+  shoulderAngle:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  gamma:
+    m_OverrideState: 1
+    m_Value: 1
+    min: 0.001
+  lutTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+  lutContribution:
+    m_OverrideState: 1
+    m_Value: 1
+    min: 0
+    max: 1
 --- !u!114 &8010918961523710100
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -460,6 +517,12 @@ MonoBehaviour:
   color:
     m_OverrideState: 1
     m_Value: {r: 0.6226415, g: 0.42564735, b: 0.26139194, a: 1}
+    hdr: 1
+    showAlpha: 0
+    showEyeDropper: 1
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
@@ -518,3 +581,6 @@ MonoBehaviour:
     m_Value: 0.75
     min: 0
     max: 1
+  filter:
+    m_OverrideState: 0
+    m_Value: 0
